@@ -1,22 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { Customer } from './entities/customer.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CustomerService {
-  create(createCustomerDto: CreateCustomerDto) {
-    return 'This action adds a new customer';
+
+  constructor(
+    @InjectRepository(Customer)
+    private customerRepository: Repository<Customer>
+  ) {}
+
+  async create(createCustomerDto: CreateCustomerDto) {
+    try {
+      if (await this.customerRepository.exists({where: {username: createCustomerDto.username} })) {
+        throw new Error('Username already exists!')
+      }
+
+      var customer: Customer = new Customer()
+      customer.first_name = createCustomerDto.first_name
+      customer.last_name = createCustomerDto.last_name
+      customer.address = createCustomerDto.address
+      customer.username = createCustomerDto.username
+      customer.password = createCustomerDto.password
+      customer.accounts = []
+
+      this.customerRepository.save(customer)
+      return 'Success'
+    } catch {
+      throw new Error('Customer creation failed!')
+    }
   }
 
   findAll() {
-    return `This action returns all customer`;
+    return this.customerRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} customer`;
+  findOne(id: string) {
+    return this.customerRepository.findOneBy({id: id})
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  remove(id: string) {
+    return this.customerRepository.delete({id: id})
   }
 }
