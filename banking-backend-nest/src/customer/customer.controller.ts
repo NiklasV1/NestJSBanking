@@ -31,4 +31,9 @@ export class CustomerController {
   createAccount(@Body() createAccountDto: CreateAccountDto) {
     return this.customerService.createAccount(createAccountDto)
   }
+
+  @Get('viewAccounts/:cusId')
+  viewAccounts(@Param('cusId') id: string){
+    // TODO:
+  }
 }
