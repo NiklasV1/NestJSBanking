@@ -30,12 +30,12 @@ export class AccountController {
     //TODO
   }
 
-  @Get('viewSentTransactions/:accId')
+  @Get('viewDeposits/:accId')
   viewDeposits(@Param('accId') id: string){
     //TODO
   }
 
-  @Get('viewSentTransactions/:accId')
+  @Get('viewWithdrawals/:accId')
   viewWithdrawals(@Param('accId') id: string){
     //TODO
   }
