@@ -16,7 +16,7 @@ CREATE TABLE account (
 );
 
 CREATE TABLE transaction (
-    id uuid PDEFAULT gen_random_uuid() RIMARY KEY,
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     message varchar(100) NOT NULL,
     amount NUMERIC(20,2) NOT NULL,
     sender uuid NOT NULL REFERENCES account(id),
