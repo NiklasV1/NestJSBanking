@@ -2,7 +2,7 @@ import { Customer } from "src/customer/entities/customer.entity";
 import { Deposit } from "src/deposit/entities/deposit.entity";
 import { Transaction } from "src/transaction/entities/transaction.entity";
 import { Withdrawal } from "src/withdrawal/entities/withdrawal.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Account {
@@ -18,6 +18,7 @@ export class Account {
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
         })
+    @JoinColumn({name: 'owner'})
     owner: Customer
 
     @Column({nullable: false, length: 100})

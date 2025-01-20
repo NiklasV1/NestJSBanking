@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { CreateAccountDto } from 'src/account/dto/create-account.dto';
 
 @Controller('customer')
 export class CustomerController {
@@ -24,5 +25,10 @@ export class CustomerController {
   @Delete('delete/:id')
   remove(@Param('id') id: string) {
     return this.customerService.remove(id);
+  }
+
+  @Post('createAccount')
+  createAccount(@Body() createAccountDto: CreateAccountDto) {
+    return this.customerService.createAccount(createAccountDto)
   }
 }

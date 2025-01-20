@@ -22,6 +22,12 @@ export class Customer {
     @Column({nullable: false, length: 100})
     password: string
 
-    @OneToMany(() => Account, (account) => account.owner)
+    @OneToMany(
+        () => Account,
+        (account) => account.owner,
+        {
+            cascade: true   
+        }    
+    )
     accounts: Account[]
 }
