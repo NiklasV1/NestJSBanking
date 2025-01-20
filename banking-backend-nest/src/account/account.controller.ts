@@ -10,11 +10,6 @@ export class AccountController {
     return this.accountService.findAll();
   }
 
-  @Get('view/:customerId')
-  findOne(@Param('customerId') id: string) {
-    return this.accountService.findOne(id);
-  }
-
   @Delete('delete/:id')
   remove(@Param('id') id: string) {
     return this.accountService.remove(id);
@@ -23,5 +18,25 @@ export class AccountController {
   @Post('toggleFreeze/:accId')
   toggleFreeze(@Param('accId') id: string) {
     return this.accountService.toggleFreeze(id)
+  }
+
+  @Get('viewSentTransactions/:accId')
+  viewSentTransactions(){
+    //TODO
+  }
+  
+  @Get('viewReceivedTransactions/:accId')
+  viewReceivedTransactions(@Param('accId') id: string){
+    //TODO
+  }
+
+  @Get('viewSentTransactions/:accId')
+  viewDeposits(@Param('accId') id: string){
+    //TODO
+  }
+
+  @Get('viewSentTransactions/:accId')
+  viewWithdrawals(@Param('accId') id: string){
+    //TODO
   }
 }
