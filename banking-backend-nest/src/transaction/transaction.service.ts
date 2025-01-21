@@ -52,4 +52,20 @@ export class TransactionService {
   remove(id: string) {
     return this.transactionRepository.delete(id)
   }
+
+  async getSent(accId: string) {
+    const account = await this.accountRepository.findOneBy({ id: accId })
+    if (!account) {
+      throw new Error("Account not found!")
+    }
+    return account.sent_transactions
+  }
+
+  async getReceived(accId: string) {
+    const account = await this.accountRepository.findOneBy({ id: accId })
+    if (!account) {
+      throw new Error("Account not found!")
+    }
+    return account.received_transactions
+  }
 }

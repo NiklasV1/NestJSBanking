@@ -23,10 +23,10 @@ export class TransactionController {
 
   @Get('getSent/:accId')
   getSent(@Param('accId', ParseUUIDPipe) id: string) {
-
+    return this.transactionService.getSent(id)
   }
   @Get('getReceived/:accId')
   getReceived(@Param('accId', ParseUUIDPipe) id: string) {
-
+    return this.transactionService.getReceived(id)
   }
 }
