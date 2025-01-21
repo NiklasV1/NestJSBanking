@@ -78,6 +78,8 @@ describe('CustomerController', () => {
       address: "Street",
       username: "NV",
     })
+
+    expect(mockCustomerService.create).toHaveBeenCalled()
   })
 
   it('should get customer info without  leaking passwords', () => {
@@ -88,6 +90,8 @@ describe('CustomerController', () => {
       address: "Street",
       username: "NV",
     })
+
+    expect(mockCustomerService.findOne).toHaveBeenCalled()
   })
 
   it('should get info of all customers in the correct format', () => {
@@ -107,11 +111,15 @@ describe('CustomerController', () => {
         username: "NV",
       }
     ])
+
+    expect(mockCustomerService.findAll).toHaveBeenCalled()
   })
 
   it('should return the correct delete information', () => {
     expect(controller.remove("fc2dc17f-fc57-4e2e-91b3-176408d57756")).resolves.toEqual(
       "Success"
     )
+
+    expect(mockCustomerService.remove).toHaveBeenCalled()
   })
 });
