@@ -21,19 +21,5 @@ CREATE TABLE transaction (
     amount NUMERIC(20,2) NOT NULL,
     sender uuid NOT NULL REFERENCES account(id),
     receiver uuid NOT NULL REFERENCES account(id),
-    timestamp timestamptz NOT NULL
-);
-
-CREATE TABLE withdrawal (
-    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    account uuid NOT NULL REFERENCES account(id),
-    amount NUMERIC(20,2) NOT NULL,
-    timestamp timestamptz NOT NULL
-);
-
-CREATE TABLE deposit (
-    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    account uuid NOT NULL REFERENCES account(id),
-    amount NUMERIC(20,2) NOT NULL,
-    timestamp timestamptz NOT NULL
+    timestamp timestamptz DEFAULT now() NOT NULL
 );

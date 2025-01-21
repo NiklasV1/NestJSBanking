@@ -3,8 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AccountModule } from './account/account.module';
 import { TransactionModule } from './transaction/transaction.module';
-import { DepositModule } from './deposit/deposit.module';
-import { WithdrawalModule } from './withdrawal/withdrawal.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomerModule } from './customer/customer.module';
 
@@ -12,8 +10,6 @@ import { CustomerModule } from './customer/customer.module';
   imports: [
     AccountModule,
     TransactionModule,
-    DepositModule,
-    WithdrawalModule,
     CustomerModule,
     TypeOrmModule.forRoot({
       type: 'postgres',

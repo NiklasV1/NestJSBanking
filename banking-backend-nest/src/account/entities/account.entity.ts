@@ -1,7 +1,5 @@
 import { Customer } from "src/customer/entities/customer.entity";
-import { Deposit } from "src/deposit/entities/deposit.entity";
 import { Transaction } from "src/transaction/entities/transaction.entity";
-import { Withdrawal } from "src/withdrawal/entities/withdrawal.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -30,15 +28,9 @@ export class Account {
     @Column({nullable: false, default: false})
     frozen: boolean
 
-    @OneToMany(()=> Transaction, (transaction)=>transaction.sender)
+    @OneToMany(()=> Transaction, (transaction)=>transaction.sender, {cascade: true})
     sent_transactions: Transaction[]
     
-    @OneToMany(()=> Transaction, (transaction)=>transaction.receiver)
+    @OneToMany(()=> Transaction, (transaction)=>transaction.receiver, {cascade: true})
     received_transactions: Transaction[]
-
-    @OneToMany(()=> Deposit, (deposit)=>deposit.account)
-    deposits: Deposit[]
-    
-    @OneToMany(()=> Withdrawal, (withdrawal)=>withdrawal.account)
-    withdrawals: Withdrawal[]
 }

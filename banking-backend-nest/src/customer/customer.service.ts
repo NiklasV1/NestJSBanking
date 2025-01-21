@@ -64,12 +64,10 @@ export class CustomerService {
 
     const account: Account = new Account()
     account.balance=0
-    account.deposits=[]
     account.frozen=false
     account.name=name
     account.received_transactions=[]
     account.sent_transactions=[]
-    account.withdrawals=[]
 
     customer.accounts.push(account)
 

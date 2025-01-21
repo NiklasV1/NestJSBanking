@@ -29,14 +29,4 @@ export class AccountController {
   viewReceivedTransactions(@Param('accId') id: string){
     //TODO
   }
-
-  @Get('viewDeposits/:accId')
-  viewDeposits(@Param('accId') id: string){
-    //TODO
-  }
-
-  @Get('viewWithdrawals/:accId')
-  viewWithdrawals(@Param('accId') id: string){
-    //TODO
-  }
 }
