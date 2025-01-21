@@ -8,8 +8,18 @@ export class CustomerController {
   constructor(private readonly customerService: CustomerService) { }
 
   @Post('create')
-  create(@Body() createCustomerDto: CreateCustomerDto) {
-    return this.customerService.create(createCustomerDto);
+  async create(@Body() createCustomerDto: CreateCustomerDto): Promise<CustomerDto> {
+    const newCustomer = await this.customerService.create(createCustomerDto)
+    if (!newCustomer) {
+      throw new Error("Customer creation failed!")
+    }
+    return new CustomerDto(
+      newCustomer.id,
+      newCustomer.username,
+      newCustomer.first_name,
+      newCustomer.last_name,
+      newCustomer.address,
+    )
   }
 
   @Get('getAll')
@@ -44,7 +54,14 @@ export class CustomerController {
   }
 
   @Delete('delete/:id')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.customerService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<string> {
+    const deletionResult = await this.customerService.remove(id)
+    if (!deletionResult) {
+      throw new Error("Deletion failed!")
+    }
+    if (!deletionResult.affected || deletionResult.affected !== 1) {
+      throw new Error("Deletion failed!")
+    }
+    return "Success"
   }
 }
