@@ -8,31 +8,33 @@ import { Customer } from 'src/customer/entities/customer.entity';
 @Injectable()
 export class AccountService {
   constructor(
-      @InjectRepository(Account)
-      private accountRepository: Repository<Account>,
-      @InjectRepository(Customer)
-      private customerRepository: Repository<Customer>
-  ) {}
+    @InjectRepository(Account)
+    private accountRepository: Repository<Account>,
+    @InjectRepository(Customer)
+    private customerRepository: Repository<Customer>
+  ) { }
 
   async create(createAccountDto: CreateAccountDto) {
-    const {customer_id, name} = createAccountDto
+    const { customer_id, name } = createAccountDto
 
     const customer: Customer | null = await this.customerRepository.findOne(
       {
-        where: {id: customer_id},
-        relations: {accounts: true  
-      }})
+        where: { id: customer_id },
+        relations: {
+          accounts: true
+        }
+      })
     if (!customer) {
       throw new Error('Customer does not exist!')
     }
 
     const account: Account = new Account()
-    account.owner=customer
-    account.balance=0
-    account.frozen=false
-    account.name=name
-    account.received_transactions=[]
-    account.sent_transactions=[]
+    account.owner = customer
+    account.balance = 0
+    account.frozen = false
+    account.name = name
+    account.received_transactions = []
+    account.sent_transactions = []
 
     return this.accountRepository.save(account)
   }
@@ -42,7 +44,7 @@ export class AccountService {
   }
 
   findOne(id: string) {
-    return this.accountRepository.findOneBy({id: id})
+    return this.accountRepository.findOneBy({ id: id })
   }
 
   remove(id: string) {
@@ -50,7 +52,7 @@ export class AccountService {
   }
 
   async toggleFreeze(id: string) {
-    const account: Account | null  = await this.accountRepository.findOneBy({id: id})
+    const account: Account | null = await this.accountRepository.findOneBy({ id: id })
     if (!account) {
       throw new Error('Account does not exist!')
     }
@@ -58,15 +60,24 @@ export class AccountService {
     return this.accountRepository.save(account)
   }
 
-  async viewAccounts(customer_id: string){
+  async viewAccounts(customer_id: string) {
     const customer: Customer | null = await this.customerRepository.findOne({
-        where: {id: customer_id},
-        relations: {accounts: true},
+      where: { id: customer_id },
+      relations: { accounts: true },
     })
     if (!customer) {
       throw new Error('Customer does not exist!')
     }
 
     return customer.accounts
+  }
+
+  async setBalance(accId: string, balance: number) {
+    const account = await this.accountRepository.findOneBy({ id: accId })
+    if (!account) {
+      throw new Error("Account not found!")
+    }
+    account.balance = balance
+    return this.accountRepository.save(account)
   }
 }

@@ -17,32 +17,34 @@ export class TransactionService {
   async create(createTransactionDto: CreateTransactionDto) {
     let { sender, receiver, message, amount } = createTransactionDto
 
-    const senderAcc = await this.accountRepository.findOneBy({ id: sender })
+    const senderAcc = await this.accountRepository.findOne({ where: { id: sender }, relations: { sent_transactions: true } })
     if (!senderAcc) {
       throw new Error("Invalid sender address!")
     }
-    const receiverAcc = await this.accountRepository.findOneBy({ id: receiver })
+    const receiverAcc = await this.accountRepository.findOne({ where: { id: receiver }, relations: { received_transactions: true } })
     if (!receiverAcc) {
       throw new Error("Invalid receiver address!")
     }
     if (senderAcc.balance < amount) {
       throw new Error("Sender balance too low!")
     }
+    if (senderAcc.frozen) {
+      throw new Error("Sender account is frozen!")
+    }
+    if (receiverAcc.frozen) {
+      throw new Error("Receiver account is frozen!")
+    }
 
     const transaction: Transaction = new Transaction()
     transaction.amount = amount
     transaction.message = message
+    transaction.sender = senderAcc
+    transaction.receiver = receiverAcc
 
     senderAcc.balance -= amount
     receiverAcc.balance += amount
 
-    senderAcc.sent_transactions.push(transaction)
-    receiverAcc.received_transactions.push(transaction)
-
-    this.accountRepository.save(senderAcc)
-    this.accountRepository.save(receiverAcc)
-
-    return 'This action adds a new transaction';
+    return this.transactionRepository.save(transaction)
   }
 
   findAll() {
