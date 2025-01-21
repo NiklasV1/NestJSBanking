@@ -1,12 +1,11 @@
 import { Controller, Get, Post, Body, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
-import { CreateAccountDto } from 'src/account/dto/create-account.dto';
 import { CustomerDto } from './dto/customer.dto';
 
 @Controller('customer')
 export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(private readonly customerService: CustomerService) { }
 
   @Post('create')
   create(@Body() createCustomerDto: CreateCustomerDto) {
@@ -17,7 +16,7 @@ export class CustomerController {
   async findAll(): Promise<CustomerDto[]> {
     const customers = await this.customerService.findAll()
     const returnValue: CustomerDto[] = []
-    customers.forEach((customer)=>{
+    customers.forEach((customer) => {
       returnValue.push(new CustomerDto(
         customer.id,
         customer.username,

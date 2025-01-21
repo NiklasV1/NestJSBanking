@@ -1,6 +1,6 @@
-import { Customer } from "src/customer/entities/customer.entity";
-import { Transaction } from "src/transaction/entities/transaction.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Customer } from "../../customer/entities/customer.entity";
+import { Transaction } from "../../transaction/entities/transaction.entity";
 
 @Entity()
 export class Account {

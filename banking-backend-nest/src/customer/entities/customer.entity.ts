@@ -1,5 +1,5 @@
-import { Account } from "src/account/entities/account.entity"
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Account } from "../../account/entities/account.entity"
 
 @Entity()
 export class Customer {

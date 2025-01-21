@@ -3,8 +3,6 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 import { Customer } from './entities/customer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateAccountDto } from 'src/account/dto/create-account.dto';
-import { Account } from 'src/account/entities/account.entity';
 
 @Injectable()
 export class CustomerService {
@@ -12,11 +10,11 @@ export class CustomerService {
   constructor(
     @InjectRepository(Customer)
     private customerRepository: Repository<Customer>
-  ) {}
+  ) { }
 
   async create(createCustomerDto: CreateCustomerDto) {
     try {
-      if (await this.customerRepository.exists({where: {username: createCustomerDto.username} })) {
+      if (await this.customerRepository.exists({ where: { username: createCustomerDto.username } })) {
         throw new Error('Username already exists!')
       }
 
@@ -39,10 +37,10 @@ export class CustomerService {
   }
 
   findOne(id: string) {
-    return this.customerRepository.findOneBy({id: id})
+    return this.customerRepository.findOneBy({ id: id })
   }
 
   remove(id: string) {
-    return this.customerRepository.delete({id: id})
+    return this.customerRepository.delete({ id: id })
   }
 }
