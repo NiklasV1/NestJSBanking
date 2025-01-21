@@ -45,41 +45,4 @@ export class CustomerService {
   remove(id: string) {
     return this.customerRepository.delete({id: id})
   }
-
-  async createAccount(createAccountDto: CreateAccountDto) {
-    const {customer_id, name} = createAccountDto
-
-    const customer: Customer | null = await this.customerRepository.findOne(
-      {
-        where: {id: customer_id},
-        relations: {accounts: true  
-      }})
-    if (!customer) {
-      throw new Error('Customer does not exist!')
-    }
-
-    const account: Account = new Account()
-    account.balance=0
-    account.frozen=false
-    account.name=name
-    account.received_transactions=[]
-    account.sent_transactions=[]
-
-    customer.accounts.push(account)
-
-    return this.customerRepository.save(customer)
-  }
-
-  async viewAccounts(customer_id: string){
-    const customer: Customer | null = await this.customerRepository.findOne({
-        where: {id: customer_id},
-        relations: {accounts: true},
-    })
-    if (!customer) {
-      throw new Error('Customer does not exist!')
-    }
-
-    return customer.accounts
-  }
-
 }

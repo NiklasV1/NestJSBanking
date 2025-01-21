@@ -48,14 +48,4 @@ export class CustomerController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.customerService.remove(id);
   }
-
-  @Post('createAccount')
-  createAccount(@Body() createAccountDto: CreateAccountDto) {
-    return this.customerService.createAccount(createAccountDto)
-  }
-
-  @Get('viewAccounts/:cusId')
-  viewAccounts(@Param('cusId', ParseUUIDPipe) id: string){
-    return this.customerService.viewAccounts(id)
-  }
 }

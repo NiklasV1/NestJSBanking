@@ -1,22 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Transaction } from './entities/transaction.entity';
+import { Repository } from 'typeorm';
+import { Account } from 'src/account/entities/account.entity';
 
 @Injectable()
 export class TransactionService {
-  create(createTransactionDto: CreateTransactionDto) {
+  constructor(
+    @InjectRepository(Transaction)
+    private transactionRepository: Repository<Transaction>,
+    @InjectRepository(Account)
+    private accountRepository: Repository<Account>
+  ) { }
+
+  async create(createTransactionDto: CreateTransactionDto) {
+    let { sender, receiver, message, amount } = createTransactionDto
+
+    const senderAcc = await this.accountRepository.findOneBy({ id: sender })
+    if (!senderAcc) {
+      throw new Error("Invalid sender address!")
+    }
+    const receiverAcc = await this.accountRepository.findOneBy({ id: receiver })
+    if (!receiverAcc) {
+      throw new Error("Invalid receiver address!")
+    }
+    if (senderAcc.balance < amount) {
+      throw new Error("Sender balance too low!")
+    }
+
+    const transaction: Transaction = new Transaction()
+    transaction.amount = amount
+    transaction.message = message
+
+    senderAcc.balance -= amount
+    receiverAcc.balance += amount
+
+    senderAcc.sent_transactions.push(transaction)
+    receiverAcc.received_transactions.push(transaction)
+
+    this.accountRepository.save(senderAcc)
+    this.accountRepository.save(receiverAcc)
+
     return 'This action adds a new transaction';
   }
 
   findAll() {
-    return `This action returns all transaction`;
+    return this.transactionRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  remove(id: string) {
+    return this.transactionRepository.delete(id)
   }
 }

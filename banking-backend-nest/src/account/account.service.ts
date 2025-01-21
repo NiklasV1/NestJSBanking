@@ -10,7 +10,32 @@ export class AccountService {
   constructor(
       @InjectRepository(Account)
       private accountRepository: Repository<Account>,
+      @InjectRepository(Customer)
+      private customerRepository: Repository<Customer>
   ) {}
+
+  async create(createAccountDto: CreateAccountDto) {
+    const {customer_id, name} = createAccountDto
+
+    const customer: Customer | null = await this.customerRepository.findOne(
+      {
+        where: {id: customer_id},
+        relations: {accounts: true  
+      }})
+    if (!customer) {
+      throw new Error('Customer does not exist!')
+    }
+
+    const account: Account = new Account()
+    account.owner=customer
+    account.balance=0
+    account.frozen=false
+    account.name=name
+    account.received_transactions=[]
+    account.sent_transactions=[]
+
+    return this.accountRepository.save(account)
+  }
 
   findAll() {
     return this.accountRepository.find()
@@ -31,5 +56,17 @@ export class AccountService {
     }
     account.frozen = !account.frozen
     return this.accountRepository.save(account)
+  }
+
+  async viewAccounts(customer_id: string){
+    const customer: Customer | null = await this.customerRepository.findOne({
+        where: {id: customer_id},
+        relations: {accounts: true},
+    })
+    if (!customer) {
+      throw new Error('Customer does not exist!')
+    }
+
+    return customer.accounts
   }
 }

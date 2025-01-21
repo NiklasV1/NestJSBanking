@@ -1,9 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { AccountService } from './account.service';
+import { CreateAccountDto } from './dto/create-account.dto';
 
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
+
+  @Post('create')
+  createAccount(@Body() createAccountDto: CreateAccountDto) {
+    return this.accountService.create(createAccountDto)
+  }
 
   @Get('getAll')
   findAll() {
@@ -20,13 +26,8 @@ export class AccountController {
     return this.accountService.toggleFreeze(id)
   }
 
-  @Get('viewSentTransactions/:accId')
-  viewSentTransactions(){
-    //TODO
-  }
-  
-  @Get('viewReceivedTransactions/:accId')
-  viewReceivedTransactions(@Param('accId') id: string){
-    //TODO
+  @Get('viewAccounts/:cusId')
+  viewAccounts(@Param('cusId', ParseUUIDPipe) id: string){
+    return this.accountService.viewAccounts(id)
   }
 }
