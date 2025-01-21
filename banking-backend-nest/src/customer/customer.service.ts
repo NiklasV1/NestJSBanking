@@ -49,8 +49,6 @@ export class CustomerService {
   async createAccount(createAccountDto: CreateAccountDto) {
     const {customer_id, name} = createAccountDto
 
-    console.log('1')
-
     const customer: Customer | null = await this.customerRepository.findOne(
       {
         where: {id: customer_id},
@@ -59,8 +57,6 @@ export class CustomerService {
     if (!customer) {
       throw new Error('Customer does not exist!')
     }
-
-    console.log('2')
 
     const account: Account = new Account()
     account.balance=0
@@ -73,4 +69,17 @@ export class CustomerService {
 
     return this.customerRepository.save(customer)
   }
+
+  async viewAccounts(customer_id: string){
+    const customer: Customer | null = await this.customerRepository.findOne({
+        where: {id: customer_id},
+        relations: {accounts: true},
+    })
+    if (!customer) {
+      throw new Error('Customer does not exist!')
+    }
+
+    return customer.accounts
+  }
+
 }

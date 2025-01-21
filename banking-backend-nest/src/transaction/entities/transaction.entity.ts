@@ -35,6 +35,6 @@ export class Transaction {
     @JoinColumn({name: 'receiver'})
     receiver: Account
 
-    @CreateDateColumn()
+    @CreateDateColumn({name: 'timestamp'})
     timestamp: Date
 }

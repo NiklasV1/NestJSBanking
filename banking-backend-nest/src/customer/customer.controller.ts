@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CreateAccountDto } from 'src/account/dto/create-account.dto';
+import { CustomerDto } from './dto/customer.dto';
 
 @Controller('customer')
 export class CustomerController {
@@ -13,17 +14,38 @@ export class CustomerController {
   }
 
   @Get('getAll')
-  findAll() {
-    return this.customerService.findAll();
+  async findAll(): Promise<CustomerDto[]> {
+    const customers = await this.customerService.findAll()
+    const returnValue: CustomerDto[] = []
+    customers.forEach((customer)=>{
+      returnValue.push(new CustomerDto(
+        customer.id,
+        customer.username,
+        customer.first_name,
+        customer.last_name,
+        customer.address
+      ))
+    })
+    return returnValue
   }
 
   @Get('get/:id')
-  findOne(@Param('id') id: string) {
-    return this.customerService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<CustomerDto> {
+    const customer = await this.customerService.findOne(id)
+    if (!customer) {
+      throw new Error('Customer not found!')
+    }
+    return new CustomerDto(
+      customer.id,
+      customer.username,
+      customer.first_name,
+      customer.last_name,
+      customer.address
+    )
   }
 
   @Delete('delete/:id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.customerService.remove(id);
   }
 
@@ -33,7 +55,7 @@ export class CustomerController {
   }
 
   @Get('viewAccounts/:cusId')
-  viewAccounts(@Param('cusId') id: string){
-    // TODO:
+  viewAccounts(@Param('cusId', ParseUUIDPipe) id: string){
+    return this.customerService.viewAccounts(id)
   }
 }
